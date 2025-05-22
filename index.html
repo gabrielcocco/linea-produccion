@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title> Linea De Produccion </title>
+  <style>
+    body {
+      background-color: #222;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+    .semaforo {
+      margin: 20px auto;
+      width: 120px;
+    }
+    .luz {
+      width: 100px;
+      height: 100px;
+      margin: 15px auto;
+      border-radius: 50%;
+      background-color: #444;
+      box-shadow: 0 0 10px #000;
+      transition: background-color 0.3s, box-shadow 0.3s;
+    }
+    .luz.activa.verde {
+      background-color: #0f0;
+      box-shadow: 0 0 30px 10px #0f0;
+    }
+    .luz.activa.amarillo {
+      background-color: #ff0;
+      box-shadow: 0 0 30px 10px #ff0;
+    }
+    .luz.activa.rojo {
+      background-color: #f00;
+      box-shadow: 0 0 30px 10px #f00;
+    }
+    button {
+      font-size: 16px;
+      margin: 10px;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    button.verde {
+      background-color: #0a0;
+      color: white;
+    }
+    button.amarillo {
+      background-color: #aa0;
+      color: black;
+    }
+    button.rojo {
+      background-color: #a00;
+      color: white;
+    }
+    button:hover {
+      opacity: 0.8;
+    }
+    #estado {
+      margin-top: 30px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1> LINEA DE PRODUCCION</h1>
+
+  <div class="semaforo">
+    <div id="luzRojo" class="luz rojo"></div>
+    <div id="luzAmarillo" class="luz amarillo"></div>
+    <div id="luzVerde" class="luz verde"></div>
+  </div>
+
+  <div>
+    <button class="rojo" onclick="cambiarEstado('rojo')">Sin material</button>
+    <button class="amarillo" onclick="cambiarEstado('amarillo')">Poco material</button>
+    <button class="verde" onclick="cambiarEstado('verde')">Material completo</button>
+  </div>
+
+  <div id="estado">Estado: Material completo</div>
+
+  <!-- Sonido de alarma -->
+  <audio id="alarmaAudio" src="alarma.mp3" preload="auto" loop></audio>
+
+  <script>
+    function cambiarEstado(color) {
+      const luces = ['Rojo', 'Amarillo', 'Verde'];
+
+      // Apagar todas las luces
+      luces.forEach(nombre => {
+        document.getElementById('luz' + nombre).classList.remove('activa');
+      });
+
+      // Encender la luz correspondiente
+      document.getElementById('luz' + color.charAt(0).toUpperCase() + color.slice(1)).classList.add('activa');
+
+      // Actualizar estado y alarma
+      const estadoTexto = document.getElementById('estado');
+      const alarma = document.getElementById('alarmaAudio');
+
+      if (color === 'rojo') {
+        estadoTexto.textContent = 'Estado: Falta de material';
+        alarma.currentTime = 0;
+        alarma.play();
+      } else if (color === 'amarillo') {
+        estadoTexto.textContent = 'Estado: Poco material';
+        alarma.pause();
+        alarma.currentTime = 0;
+      } else {
+        estadoTexto.textContent = 'Estado: Material completo';
+        alarma.pause();
+        alarma.currentTime = 0;
+      }
+    }
+
+    // Inicializar en verde
+    cambiarEstado('verde');
+  </script>
+
+</body>
+</html>
+
